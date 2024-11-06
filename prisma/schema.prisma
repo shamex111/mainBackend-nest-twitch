@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int                @id @default(autoincrement()) @map("id")
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+  description          String             @default("Описание отсутствует.")
+  username             String             @unique
+  password             String
+  avatar               String
+  descriptionParts     DescriptionPart[]
+  color                String             @default("#fff")
+  following            Follower[]         @relation("UserFollowing")
+  followers            Follower[]         @relation("UserFollowers")
+  bans                 Ban[]              @relation("targetUser")
+  issuedBans           Ban[]              @relation("streamerId")
+  userModerators       Moderator[]        @relation("StreamModerators")
+  appointedModerators  Moderator[]
+  streamerCurrency     StreamerCurrency[]
+  currencyBalance      CurrencyBalance[]
+  userRewards          UserReward[]
+  boughtRewards        BuyerReward[]
+  soldRewards          BuyerReward[]      @relation("streamer_id")
+  Emote                Emote[]
+  Stream               Stream[]
+  StreamStats          StreamStats[]
+  Chat                 Chat[]
+  Message              Message[]
+  receivedNotification Notification[]
+  sentNotifications    Notification[]     @relation("fromUserNotification")
+}
+
+model Follower {
+  id         Int      @id @default(autoincrement()) @map("id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation("UserFollowing", fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  streamer   User     @relation("UserFollowers", fields: [streamerId], references: [id], onDelete: Cascade)
+  streamerId Int
+}
+
+model Moderator {
+  id         Int      @id @default(autoincrement()) @map("id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  streamer   User     @relation("StreamModerators", fields: [streamerId], references: [id], onDelete: Cascade)
+  streamerId Int
+  issuedBans Ban[]    @relation("ModeratorBans")
+}
+
+model DescriptionPart {
+  id          Int      @id @default(autoincrement()) @map("id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  image       String
+  description String
+  url         String
+}
+
+model UserReward {
+  id           Int           @id @default(autoincrement()) @map("id")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  image        String
+  name         String
+  price        Int
+  BuyerRewards BuyerReward[]
+}
+
+model Ban {
+  id          Int       @id @default(autoincrement()) @map("id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  user        User      @relation("targetUser", fields: [userId], references: [id])
+  userId      Int
+  moderator   Moderator @relation("ModeratorBans", fields: [moderatorId], references: [id])
+  moderatorId Int
+  streamer    User      @relation("streamerId", fields: [streamerId], references: [id])
+  streamerId  Int
+  reason      String
+  action      String
+  expiresAt   DateTime?
+}
+
+model StreamerCurrency {
+  id               Int               @id @default(autoincrement()) @map("id")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  name             String
+  image            String
+  currencyBalances CurrencyBalance[]
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int
+}
+
+model CurrencyBalance {
+  id                 Int               @id @default(autoincrement()) @map("id")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  streamerCurrency   StreamerCurrency? @relation(fields: [streamerCurrencyId], references: [id], onDelete: Cascade)
+  streamerCurrencyId Int?
+  count              Int               @default(0)
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             Int
+}
+
+model BuyerReward {
+  id         Int        @id @default(autoincrement()) @map("id")
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+  user       User       @relation(fields: [userId], references: [id])
+  userId     Int
+  reward     UserReward @relation(fields: [rewardId], references: [id])
+  rewardId   Int
+  streamer   User       @relation("streamer_id", fields: [streamerId], references: [id])
+  streamerId Int
+}
+
+model Stream {
+  id               Int        @id @default(autoincrement()) @map("id")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+  name             String
+  countOnline      Int        @default(0)
+  categorys        Category[]
+  tag              String[]
+  theHighestOnline Int
+  theAverageOnline Int
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int
+  Chat             Chat[]
+  qualityUrls      Json
+}
+
+model StreamStats {
+  id               Int        @id @default(autoincrement()) @map("id")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+  name             String
+  whenEnded        DateTime
+  duration         Int
+  categorys        Category[]
+  tag              String[]
+  theHighestOnline Int
+  theAverageOnline Int
+  user             User       @relation(fields: [userId], references: [id])
+  userId           Int
+}
+
+model Emote {
+  id        Int      @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  image     String
+  name      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+
+  @@unique([name, userId])
+}
+
+model Category {
+  id            Int          @id @default(autoincrement()) @map("id")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  StreamStats   StreamStats? @relation(fields: [streamStatsId], references: [id])
+  streamStatsId Int?
+  Stream        Stream?      @relation(fields: [streamId], references: [id])
+  streamId      Int?
+  name          String
+  image         String
+  description   String
+}
+
+model Chat {
+  id              Int       @id @default(autoincrement()) @map("id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  stream          Stream    @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  streamId        Int
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int
+  messages        Message[] @relation("ChatMessages")
+  pinnedMessage   Message?  @relation("PinnedMessage", fields: [pinnedMessageId], references: [id])
+  pinnedMessageId Int?
+}
+
+model Message {
+  id            Int       @id @default(autoincrement()) @map("id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  chat          Chat      @relation("ChatMessages", fields: [chatId], references: [id], onDelete: Cascade)
+  chatId        Int
+  sender        User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId      Int       @map("sender_id")
+  reply         Message?  @relation("MessageReplies", fields: [messageId], references: [id])
+  messageId     Int?      @map("message_id")
+  replies       Message[] @relation("MessageReplies")
+  pinnedInChats Chat[]    @relation("PinnedMessage")
+  content       String
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement()) @map("id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  content    String
+  link       String
+  forUser    User     @relation(fields: [forUserId], references: [id])
+  forUserId  Int
+  fromUser   User     @relation("fromUserNotification", fields: [fromUserId], references: [id])
+  fromUserId Int
+}
+
+enum banAction {
+  mute
+  ban
+}
