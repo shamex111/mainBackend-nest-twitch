@@ -1,232 +1,85 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
+    output   = "./__generated__"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("POSTGRES_URI")
 }
 
 model User {
-  id                   Int                @id @default(autoincrement()) @map("id")
-  createdAt            DateTime           @default(now()) @map("created_at")
-  updatedAt            DateTime           @updatedAt @map("updated_at")
-  description          String             @default("Описание отсутствует.")
-  username             String             @unique
-  password             String
-  avatar               String
-  descriptionParts     DescriptionPart[]
-  color                String             @default("#fff")
-  following            Follower[]         @relation("UserFollowing")
-  followers            Follower[]         @relation("UserFollowers")
-  bans                 Ban[]              @relation("targetUser")
-  issuedBans           Ban[]              @relation("streamerId")
-  userModerators       Moderator[]        @relation("StreamModerators")
-  appointedModerators  Moderator[]
-  streamerCurrency     StreamerCurrency[]
-  currencyBalance      CurrencyBalance[]
-  userRewards          UserReward[]
-  boughtRewards        BuyerReward[]
-  soldRewards          BuyerReward[]      @relation("streamer_id")
-  Emote                Emote[]
-  Stream               Stream[]
-  StreamStats          StreamStats[]
-  Chat                 Chat[]
-  Message              Message[]
-  receivedNotification Notification[]
-  sentNotifications    Notification[]     @relation("fromUserNotification")
+    id String @id @default(uuid())
+
+    email    String @unique
+    password String
+
+    name   String
+    avatar String @default("")
+
+    isVerified         Boolean @default(false) @map("is_verified")
+    isTwoFactorEnabled Boolean @default(false) @map("is_two_factor_enabled")
+
+    method  AuthMethod
+    account Account[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("users")
 }
 
-model Follower {
-  id         Int      @id @default(autoincrement()) @map("id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  user       User     @relation("UserFollowing", fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
-  streamer   User     @relation("UserFollowers", fields: [streamerId], references: [id], onDelete: Cascade)
-  streamerId Int
+model Account {
+    id String @id @default(uuid())
+
+    type     String
+    provider String
+
+    refreshToken String? @map("refresh_token")
+    accessToken  String? @map("access_token")
+    expiresAt    Int     @map("expires_at")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+
+    @@map("accounts")
 }
 
-model Moderator {
-  id         Int      @id @default(autoincrement()) @map("id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
-  streamer   User     @relation("StreamModerators", fields: [streamerId], references: [id], onDelete: Cascade)
-  streamerId Int
-  issuedBans Ban[]    @relation("ModeratorBans")
+model Token {
+    id String @id @default(uuid())
+
+    email     String
+    token     String
+    type      TokenType
+    expiresIn DateTime  @map("expires_in")
+    createdAt DateTime  @default(now()) @map("created_at")
+
+    @@map("tokens")
 }
 
-model DescriptionPart {
-  id          Int      @id @default(autoincrement()) @map("id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  image       String
-  description String
-  url         String
+model Session {
+    id String @id @default(uuid())
+
+    userId String @map("user_id")
+
+    userAgent  String
+    ipAddress  String
+    lastLogin  DateTime
+    lastAction DateTime
+    isActive   Boolean
 }
 
-model UserReward {
-  id           Int           @id @default(autoincrement()) @map("id")
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       Int
-  image        String
-  name         String
-  price        Int
-  BuyerRewards BuyerReward[]
+enum AuthMethod {
+    CREDENTIALS
+    GOOGLE
+    YANDEX
+    GITHUB
 }
 
-model Ban {
-  id          Int       @id @default(autoincrement()) @map("id")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  user        User      @relation("targetUser", fields: [userId], references: [id])
-  userId      Int
-  moderator   Moderator @relation("ModeratorBans", fields: [moderatorId], references: [id])
-  moderatorId Int
-  streamer    User      @relation("streamerId", fields: [streamerId], references: [id])
-  streamerId  Int
-  reason      String
-  action      String
-  expiresAt   DateTime?
-}
-
-model StreamerCurrency {
-  id               Int               @id @default(autoincrement()) @map("id")
-  createdAt        DateTime          @default(now()) @map("created_at")
-  updatedAt        DateTime          @updatedAt @map("updated_at")
-  name             String
-  image            String
-  currencyBalances CurrencyBalance[]
-  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           Int
-}
-
-model CurrencyBalance {
-  id                 Int               @id @default(autoincrement()) @map("id")
-  createdAt          DateTime          @default(now()) @map("created_at")
-  updatedAt          DateTime          @updatedAt @map("updated_at")
-  streamerCurrency   StreamerCurrency? @relation(fields: [streamerCurrencyId], references: [id], onDelete: Cascade)
-  streamerCurrencyId Int?
-  count              Int               @default(0)
-  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             Int
-}
-
-model BuyerReward {
-  id         Int        @id @default(autoincrement()) @map("id")
-  createdAt  DateTime   @default(now()) @map("created_at")
-  updatedAt  DateTime   @updatedAt @map("updated_at")
-  user       User       @relation(fields: [userId], references: [id])
-  userId     Int
-  reward     UserReward @relation(fields: [rewardId], references: [id])
-  rewardId   Int
-  streamer   User       @relation("streamer_id", fields: [streamerId], references: [id])
-  streamerId Int
-}
-
-model Stream {
-  id               Int        @id @default(autoincrement()) @map("id")
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
-  name             String
-  countOnline      Int        @default(0)
-  categorys        Category[]
-  tag              String[]
-  theHighestOnline Int
-  theAverageOnline Int
-  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           Int
-  Chat             Chat[]
-  qualityUrls      Json
-}
-
-model StreamStats {
-  id               Int        @id @default(autoincrement()) @map("id")
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
-  name             String
-  whenEnded        DateTime
-  duration         Int
-  categorys        Category[]
-  tag              String[]
-  theHighestOnline Int
-  theAverageOnline Int
-  user             User       @relation(fields: [userId], references: [id])
-  userId           Int
-}
-
-model Emote {
-  id        Int      @id @default(autoincrement()) @map("id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  image     String
-  name      String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-
-  @@unique([name, userId])
-}
-
-model Category {
-  id            Int          @id @default(autoincrement()) @map("id")
-  createdAt     DateTime     @default(now()) @map("created_at")
-  updatedAt     DateTime     @updatedAt @map("updated_at")
-  StreamStats   StreamStats? @relation(fields: [streamStatsId], references: [id])
-  streamStatsId Int?
-  Stream        Stream?      @relation(fields: [streamId], references: [id])
-  streamId      Int?
-  name          String
-  image         String
-  description   String
-}
-
-model Chat {
-  id              Int       @id @default(autoincrement()) @map("id")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  stream          Stream    @relation(fields: [streamId], references: [id], onDelete: Cascade)
-  streamId        Int
-  user            User      @relation(fields: [userId], references: [id])
-  userId          Int
-  messages        Message[] @relation("ChatMessages")
-  pinnedMessage   Message?  @relation("PinnedMessage", fields: [pinnedMessageId], references: [id])
-  pinnedMessageId Int?
-}
-
-model Message {
-  id            Int       @id @default(autoincrement()) @map("id")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  chat          Chat      @relation("ChatMessages", fields: [chatId], references: [id], onDelete: Cascade)
-  chatId        Int
-  sender        User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  senderId      Int       @map("sender_id")
-  reply         Message?  @relation("MessageReplies", fields: [messageId], references: [id])
-  messageId     Int?      @map("message_id")
-  replies       Message[] @relation("MessageReplies")
-  pinnedInChats Chat[]    @relation("PinnedMessage")
-  content       String
-}
-
-model Notification {
-  id         Int      @id @default(autoincrement()) @map("id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  content    String
-  link       String
-  forUser    User     @relation(fields: [forUserId], references: [id])
-  forUserId  Int
-  fromUser   User     @relation("fromUserNotification", fields: [fromUserId], references: [id])
-  fromUserId Int
-}
-
-enum banAction {
-  mute
-  ban
+enum TokenType {
+    VERIFICATION
+    TWO_FACTOR
+    PASSWORD_RESET
 }
