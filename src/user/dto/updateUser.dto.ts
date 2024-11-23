@@ -12,4 +12,8 @@ export class UpdateUserDto {
   @IsOptional()
   @IsBoolean({message:'IsTwoFactorEnabled должен быть булевым значением.'})
   isTwoFactorEnabled:boolean
+
+  @IsOptional()
+  @IsString()
+  code:string
 } 

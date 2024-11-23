@@ -16,7 +16,7 @@ export const getProvidersConfig = async (
     new YandexProvider({
       client_id: configService.getOrThrow<string>('YANDEX_CLIENT_ID'),
       client_secret: configService.getOrThrow<string>('YANDEX_CLIENT_SECRET'),
-      scopes: ['login:email',  'login:info'],
+      scopes: ['login:email', 'login:info'],
     }),
   ],
 });

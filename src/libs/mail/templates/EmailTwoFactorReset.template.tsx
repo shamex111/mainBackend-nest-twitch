@@ -3,22 +3,24 @@ import {
   Body,
   Heading,
   Html,
+  Link,
   Tailwind,
   Text,
 } from '@react-email/components';
 
-interface TwoFactorAuthTemplateProps {
+interface TwoFactorResetTemplateProps {
   token: string;
 }
 
-export function TwoFactorAuthTemplate({ token }: TwoFactorAuthTemplateProps) {
+export function TwoFactorResetTemplate({ token }: TwoFactorResetTemplateProps) {
   return (
     <Tailwind>
       <Html>
         <Body>
-          <Heading className="text-black">Двухфакторная аутентификация</Heading>
+          <Heading className="text-black">Отключение двухфакторной аутентификации</Heading>
+          <strong>Вы собираетесь отключить 2-ую аутентификацию, это может привести к понижению безопасности аккаунта.</strong>
           <Text>
-            Ваш код двухфакторной аутентификации:<strong>{" " + token}</strong>
+            Ваш код для отключения двухфакторной аутентификации:<strong>{" " + token}</strong>
           </Text>
           <Text>
             Пожалуйста, введите этот код в приложение для завершения процесса

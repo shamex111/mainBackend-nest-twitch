@@ -51,7 +51,9 @@ export type AuthMethod = (typeof AuthMethod)[keyof typeof AuthMethod]
 export const TokenType: {
   VERIFICATION: 'VERIFICATION',
   TWO_FACTOR: 'TWO_FACTOR',
-  PASSWORD_RESET: 'PASSWORD_RESET'
+  PASSWORD_RESET: 'PASSWORD_RESET',
+  TWO_FACTOR_RESET: 'TWO_FACTOR_RESET',
+  EMAIL_CHANGE: 'EMAIL_CHANGE'
 };
 
 export type TokenType = (typeof TokenType)[keyof typeof TokenType]

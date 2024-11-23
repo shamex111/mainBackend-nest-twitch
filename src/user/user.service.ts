@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -7,9 +9,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserCreateDto } from './dto/createUser.dto';
 import { hash } from 'argon2';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { TwoFactorAuthService } from 'src/auth/two-factor-auth/two-factor-auth.service';
 @Injectable()
 export class UserService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly prismaService: PrismaService,
+    @Inject(forwardRef(() => TwoFactorAuthService))
+    private readonly twoFactorAuthService: TwoFactorAuthService,
+  ) {}
 
   public async create(dto: UserCreateDto) {
     const isExists = await this.findByEmail(dto.email);
@@ -25,6 +32,7 @@ export class UserService {
         password: await hash(dto.password),
         name: dto.name,
         method: dto.method,
+        isVerified: dto.isVerified,
       },
     });
     return user;
@@ -39,6 +47,13 @@ export class UserService {
       );
     }
 
+    if (dto.isTwoFactorEnabled === false) {
+      if (user.isTwoFactorEnabled) {
+        const email = (await this.findById(userId)).email;
+        await this.twoFactorAuthService.validateToken(dto.code, email, 'reset');
+      }
+    }
+    if (dto.code) delete dto.code;
     const updatedUser = await this.prismaService.user.update({
       where: {
         id: user.id,

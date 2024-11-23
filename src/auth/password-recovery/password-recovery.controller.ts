@@ -10,7 +10,6 @@ export class PasswordRecoveryController {
     private readonly passwordRecoveryService: PasswordRecoveryService,
   ) {}
 
-  @Recaptcha()
   @Post('send-password-recovery')
   @HttpCode(HttpStatus.OK)
   public async send(@Body() dto: SendPasswordDto) {

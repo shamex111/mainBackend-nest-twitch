@@ -1,28 +1,22 @@
 import * as React from 'react';
-import {
-  Body,
-  Heading,
-  Html,
-  Tailwind,
-  Text,
-} from '@react-email/components';
+import { Body, Heading, Html, Tailwind, Text } from '@react-email/components';
 
-interface TwoFactorAuthTemplateProps {
+interface EmailChangeTemplateProps {
   token: string;
 }
 
-export function TwoFactorAuthTemplate({ token }: TwoFactorAuthTemplateProps) {
+export function EmailChangeTemplate({ token }: EmailChangeTemplateProps) {
   return (
     <Tailwind>
       <Html>
         <Body>
-          <Heading className="text-black">Двухфакторная аутентификация</Heading>
+          <Heading className="text-black">Изменение почты</Heading>
           <Text>
-            Ваш код двухфакторной аутентификации:<strong>{" " + token}</strong>
+            Ваш код для изменения почты:<strong>{' ' + token}</strong>
           </Text>
           <Text>
             Пожалуйста, введите этот код в приложение для завершения процесса
-            аутентификации.Код действителен 5 минут.
+            смены почты.Код действителен 5 минут.
           </Text>
           <Text>
             Если вы не запрашивали этот код, просто проигнорируйте это

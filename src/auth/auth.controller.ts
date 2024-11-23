@@ -45,7 +45,6 @@ export class AuthController {
   @Get('/oauth/callback/:provider')
   @Provider()
   public async callback(
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Query('code') code: string,
     @Param('provider') provider: string,
@@ -53,7 +52,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException('Не был предоставлен код авторизации');
     }
-    await this.authService.extractProfileFromCode(req, provider, code);
+    await this.authService.extractProfileFromCode( provider, code);
     return res.redirect(
       `${this.configService.getOrThrow<string>('ALLOWED_ORIGIN')}/dashboard/settings`,
     );

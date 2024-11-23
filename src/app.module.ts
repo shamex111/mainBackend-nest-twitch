@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { IS_DEV_ENV } from './libs/common/utils/is-dev.util';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +9,10 @@ import { ProviderModule } from './auth/provider/provider.module';
 import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module';
 import { TwoFactorAuthModule } from './auth/two-factor-auth/two-factor-auth.module';
 import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
+import { getRedisConfig } from './config/redis.config';
+import { EmailChangeModule } from './auth/email-change/email-change.module';
+import { SessionModule } from './auth/session/session.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -16,6 +20,7 @@ import { PasswordRecoveryModule } from './auth/password-recovery/password-recove
       ignoreEnvFile: !IS_DEV_ENV,
       isGlobal: true,
     }),
+    RedisModule,
     UserModule,
     AuthModule,
     PrismaModule,
@@ -24,7 +29,10 @@ import { PasswordRecoveryModule } from './auth/password-recovery/password-recove
     EmailConfirmationModule,
     TwoFactorAuthModule,
     PasswordRecoveryModule,
+    EmailChangeModule,
+    SessionModule,
   ],
+
   controllers: [],
   providers: [],
 })

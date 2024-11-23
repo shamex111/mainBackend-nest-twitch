@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MinLength,
   Validate,
@@ -31,4 +32,7 @@ export class UserCreateDto {
   @IsNotEmpty({ message: 'Метод регистрации не может быть пустым.' })
   @IsEnum(AuthMethod, { message: 'Метод регистрации не может быть пустым.' })
   method: AuthMethod;
+
+  @IsOptional()
+  isVerified?:boolean
 }

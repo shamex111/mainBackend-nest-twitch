@@ -16,8 +16,16 @@ import { MailService } from 'src/libs/mail/mail.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, UserService,MailService,JwtStrategy,TwoFactorAuthService,EmailConfirmationService],
-  imports: [ ConfigModule,
+  providers: [
+    AuthService,
+    UserService,
+    MailService,
+    JwtStrategy,
+    TwoFactorAuthService,
+    EmailConfirmationService,
+  ],
+  imports: [
+    ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -34,6 +42,6 @@ import { MailService } from 'src/libs/mail/mail.service';
       inject: [ConfigService],
     }),
   ],
-  exports:[AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

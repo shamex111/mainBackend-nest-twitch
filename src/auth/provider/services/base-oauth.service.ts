@@ -77,7 +77,6 @@ export class BaseOAuthService {
     const user = await userRequest.json();
 
     const userData = await this.extractUserInfo(user);
-
     return {
       ...userData,
       access_token: tokenResponse.access_token,

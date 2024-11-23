@@ -21,8 +21,8 @@ export class AuthService {
     private readonly jwt: JwtService,
     private readonly providerService: ProviderService,
     private readonly prismaService: PrismaService,
-    private readonly emailConfirmationService:EmailConfirmationService,
-    private readonly twoFactorAuthService:TwoFactorAuthService
+    private readonly emailConfirmationService: EmailConfirmationService,
+    private readonly twoFactorAuthService: TwoFactorAuthService,
   ) {}
 
   public async register(dto: RegisterDto) {
@@ -34,10 +34,9 @@ export class AuthService {
     });
 
     await this.emailConfirmationService.sendVerificationUser(newUser.email);
-    return {
-      message:
-        'Вы успешно зарегестрировались. Пожалуйста, подтвердите ваш email. Сообщение было отправлено на ваш почтовый адрес.',
-    };
+    const tokens = this.issueTokens({ id: newUser.id, name: newUser.name });
+
+    return { newUser, ...tokens };
   }
 
   public async login(dto: LoginDto) {
@@ -57,9 +56,6 @@ export class AuthService {
 
     if (!user.isVerified) {
       await this.emailConfirmationService.sendVerificationUser(user.email);
-      throw new UnauthorizedException(
-        'Ваш email не подтвержден. Пожалуйста, проверьте вашу почту и подтвердите адрес.',
-      );
     }
     if (user.isTwoFactorEnabled) {
       if (!dto.code) {
@@ -70,10 +66,11 @@ export class AuthService {
         };
       }
 
-        await this.twoFactorAuthService.validateToken(
-          dto.code,
-          user.email,
-        );
+      await this.twoFactorAuthService.validateToken(
+        dto.code,
+        user.email,
+        'login',
+      );
     }
 
     const tokens = this.issueTokens({ id: user.id, name: user.name });
@@ -81,11 +78,7 @@ export class AuthService {
     return { user, ...tokens };
   }
 
-  public async extractProfileFromCode(
-    req: Request,
-    provider: string,
-    code: string,
-  ) {
+  public async extractProfileFromCode(provider: string, code: string) {
     const providerInstance = this.providerService.findByService(provider);
     const profile = await providerInstance.findUserByCode(code);
     const account = await this.prismaService.account.findFirst({
@@ -101,7 +94,6 @@ export class AuthService {
 
     if (user) {
       const tokens = this.issueTokens({ id: user.id, name: user.name });
-
       return { user, ...tokens };
     }
 
@@ -110,6 +102,7 @@ export class AuthService {
       name: profile.name,
       password: '',
       method: AuthMethod[profile.provider.toUpperCase()],
+      isVerified: true,
     });
 
     if (!account) {

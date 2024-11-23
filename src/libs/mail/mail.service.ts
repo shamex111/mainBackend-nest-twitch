@@ -5,6 +5,8 @@ import { render } from '@react-email/components';
 import { EmailConfirmationTemplate } from './templates/EmailConfirmation.template';
 import { ResetPasswordTemplate } from './templates/EmailResetPassword.template';
 import { TwoFactorAuthTemplate } from './templates/EmailTwoFactor.template';
+import { TwoFactorResetTemplate } from './templates/EmailTwoFactorReset.template';
+import { EmailChangeTemplate } from './templates/EmailEmailChange.template';
 @Injectable()
 export class MailService {
   public constructor(
@@ -28,6 +30,18 @@ export class MailService {
     const html = await render(TwoFactorAuthTemplate({ token }));
 
     return this.sendMail(email, 'Подтверждение вашей личности', html);
+  }
+
+  public async sendTwoFactorReset(email: string, token: string){
+    const html = await render(TwoFactorResetTemplate({ token }));
+
+    return this.sendMail(email, 'Отключение 2-ой аутентификации', html);
+  }
+
+  public async sendEmailChange(email: string, token: string){
+    const html = await render(EmailChangeTemplate({ token }));
+
+    return this.sendMail(email, 'Смена почты', html);
   }
 
   private async sendMail(email: string, subject: string, html: string) {

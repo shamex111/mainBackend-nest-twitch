@@ -190,7 +190,9 @@ exports.AuthMethod = exports.$Enums.AuthMethod = {
 exports.TokenType = exports.$Enums.TokenType = {
   VERIFICATION: 'VERIFICATION',
   TWO_FACTOR: 'TWO_FACTOR',
-  PASSWORD_RESET: 'PASSWORD_RESET'
+  PASSWORD_RESET: 'PASSWORD_RESET',
+  TWO_FACTOR_RESET: 'TWO_FACTOR_RESET',
+  EMAIL_CHANGE: 'EMAIL_CHANGE'
 };
 
 exports.Prisma.ModelName = {
