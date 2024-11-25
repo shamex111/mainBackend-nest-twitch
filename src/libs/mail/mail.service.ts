@@ -18,30 +18,30 @@ export class MailService {
     const domain = this.configService.getOrThrow<string>('ALLOWED_ORIGIN');
     const html = await render(EmailConfirmationTemplate({ domain, token }));
 
-    return this.sendMail(email, 'Подтверждение почты', html);
+    return this.sendMail(email, 'SHAMEX_TWITCH: Подтверждение почты', html);
   }
   public async sendPasswordReset(email: string, token: string) {
     const domain = this.configService.getOrThrow<string>('ALLOWED_ORIGIN');
     const html = await render(ResetPasswordTemplate({ domain, token }));
 
-    return this.sendMail(email, 'Сброс пароля', html);
+    return this.sendMail(email, 'SHAMEX_TWITCH: Сброс пароля', html);
   }
   public async sendTwoFactorAuth(email: string, token: string) {
     const html = await render(TwoFactorAuthTemplate({ token }));
 
-    return this.sendMail(email, 'Подтверждение вашей личности', html);
+    return this.sendMail(email, 'SHAMEX_TWITCH: Подтверждение вашей личности', html);
   }
 
   public async sendTwoFactorReset(email: string, token: string){
     const html = await render(TwoFactorResetTemplate({ token }));
 
-    return this.sendMail(email, 'Отключение 2-ой аутентификации', html);
+    return this.sendMail(email, 'SHAMEX_TWITCH: Отключение 2-ой аутентификации', html);
   }
 
   public async sendEmailChange(email: string, token: string){
     const html = await render(EmailChangeTemplate({ token }));
 
-    return this.sendMail(email, 'Смена почты', html);
+    return this.sendMail(email, 'SHAMEX_TWITCH: Смена почты', html);
   }
 
   private async sendMail(email: string, subject: string, html: string) {

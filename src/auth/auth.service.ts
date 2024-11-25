@@ -1,31 +1,35 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { RegisterDto } from './dto/register.dto';
-import { AuthMethod } from 'prisma/__generated__';
-import { JwtService } from '@nestjs/jwt';
+import { AuthMethod, User } from 'prisma/__generated__';
 import { LoginDto } from './dto/login.dto';
 import { verify } from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProviderService } from './provider/provider.service';
 import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
 import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service';
+import { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { UAParser } from 'ua-parser-js';
 
 @Injectable()
 export class AuthService {
   public constructor(
     private readonly userService: UserService,
-    private readonly jwt: JwtService,
     private readonly providerService: ProviderService,
     private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
     private readonly emailConfirmationService: EmailConfirmationService,
     private readonly twoFactorAuthService: TwoFactorAuthService,
   ) {}
-
-  public async register(dto: RegisterDto) {
+  protected parser = new UAParser();
+  public async register(dto: RegisterDto, req: Request) {
+    
     const newUser = await this.userService.create({
       email: dto.email,
       name: dto.name,
@@ -33,13 +37,12 @@ export class AuthService {
       method: AuthMethod.CREDENTIALS,
     });
 
-    await this.emailConfirmationService.sendVerificationUser(newUser.email);
-    const tokens = this.issueTokens({ id: newUser.id, name: newUser.name });
+    this.emailConfirmationService.sendVerificationUser(newUser.email);
 
-    return { newUser, ...tokens };
+    return this.saveSession(req, newUser);
   }
 
-  public async login(dto: LoginDto) {
+  public async login(dto: LoginDto, req: Request) {
     const user = await this.userService.findByEmail(dto.email);
 
     if (!user)
@@ -55,7 +58,7 @@ export class AuthService {
     }
 
     if (!user.isVerified) {
-      await this.emailConfirmationService.sendVerificationUser(user.email);
+       this.emailConfirmationService.sendVerificationUser(user.email);
     }
     if (user.isTwoFactorEnabled) {
       if (!dto.code) {
@@ -73,12 +76,14 @@ export class AuthService {
       );
     }
 
-    const tokens = this.issueTokens({ id: user.id, name: user.name });
-
-    return { user, ...tokens };
+    return this.saveSession(req, user);
   }
 
-  public async extractProfileFromCode(provider: string, code: string) {
+  public async extractProfileFromCode(
+    provider: string,
+    code: string,
+    req: Request,
+  ) {
     const providerInstance = this.providerService.findByService(provider);
     const profile = await providerInstance.findUserByCode(code);
     const account = await this.prismaService.account.findFirst({
@@ -93,8 +98,7 @@ export class AuthService {
       : null;
 
     if (user) {
-      const tokens = this.issueTokens({ id: user.id, name: user.name });
-      return { user, ...tokens };
+      return this.saveSession(req, user);
     }
 
     user = await this.userService.create({
@@ -117,38 +121,47 @@ export class AuthService {
         },
       });
     }
-    const tokens = this.issueTokens({ id: user.id, name: user.name });
-
-    return { user, ...tokens };
+    return this.saveSession(req, user);
   }
 
-  async getNewTokens(refreshToken: string) {
-    const result = this.jwt.verify(refreshToken);
+  public async logout(req: Request, res: Response): Promise<void> {
+    return new Promise((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) {
+          return reject(
+            new InternalServerErrorException(
+              'Не удалось завершить сессию. Возможно, возникла проблема с серве  ром или сессия уже была завершена.',
+            ),
+          );
+        }
+        res.clearCookie(this.configService.getOrThrow<string>('SESSION_NAME'));
+        resolve();
+      });
+    });
+  }
+  public async saveSession(req: Request, user: User) {
+    try {
+      req.session.userId = user.id;
 
-    if (!result)
-      throw new UnauthorizedException(
-        'Невалидный refresh токен.Пожалуйста, проверьте корректность введенного токена или запросите новый.',
+      await new Promise<void>((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) {
+            return reject(
+              new InternalServerErrorException(
+                'Не удалось сохранить сессию. Проверьте, правильно ли настроены параметры сессии.',
+              ),
+            );
+          }
+          resolve();
+        });
+      });
+
+      return { user };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Ошибка при сохранении сессии',
+        error,
       );
-    let user = await this.userService.findById(result.id);
-
-    const tokens = this.issueTokens({ id: user.id, name: user.name });
-
-    return {
-      user,
-      ...tokens,
-    };
-  }
-
-  private issueTokens(user: { id: string; name: string }) {
-    const payload = { id: user.id, username: user.name };
-
-    const accessToken = this.jwt.sign(payload, {
-      expiresIn: '30m',
-    });
-
-    const refreshToken = this.jwt.sign(payload, {
-      expiresIn: '7d',
-    });
-    return { accessToken, refreshToken };
+    }
   }
 }

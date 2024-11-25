@@ -1,3 +1,4 @@
+//сделать индексы
 generator client {
     provider = "prisma-client-js"
     output   = "./__generated__"
@@ -14,19 +15,284 @@ model User {
     email    String @unique
     password String
 
-    name   String
-    avatar String @default("")
-
+    name               String
+    avatar             String  @default("")
+    description        String  @default("")
+    banner             String  @default("")
     isVerified         Boolean @default(false) @map("is_verified")
     isTwoFactorEnabled Boolean @default(false) @map("is_two_factor_enabled")
+    color              String  @default("#fff")
+    countFollowers     Int     @default(0)
 
-    method  AuthMethod
-    account Account[]
+    descriptionParts     DescriptionPart[]
+    following            Follower[]         @relation("UserFollowing")
+    followers            Follower[]         @relation("UserFollowers")
+    bans                 Ban[]              @relation("targetUser")
+    issuedBans           Ban[]              @relation("streamerId")
+    userModerators       Moderator[]        @relation("StreamModerators")
+    appointedModerators  Moderator[]
+    streamerCurrency     StreamerCurrency[]
+    currencyBalance      CurrencyBalance[]
+    userRewards          UserReward[]
+    boughtRewards        BuyerReward[]
+    subscriptions        Subscription[]     @relation("Subscriptions")
+    subscribers          Subscription[]     @relation("Subscribers")
+    Emote                Emote[]
+    Stream               Stream?            @relation(fields: [streamId], references: [id])
+    streamId             String?            @unique
+    StreamStats          StreamStats[]
+    chat                 Chat[]
+    Message              Message[]
+    receivedNotification Notification[]
+    sentNotifications    Notification[]     @relation("fromUserNotification")
+    method               AuthMethod
+    account              Account[]
+    UserSubscription     UserSubscription[]
+
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+
+    @@map("users")
+}
+
+model Follower {
+    id         String   @id @default(uuid()) @map("id")
+    createdAt  DateTime @default(now()) @map("created_at")
+    updatedAt  DateTime @updatedAt @map("updated_at")
+    user       User     @relation("UserFollowing", fields: [userId], references: [id], onDelete: Cascade)
+    userId     String
+    streamer   User     @relation("UserFollowers", fields: [streamerId], references: [id], onDelete: Cascade)
+    streamerId String
+
+    @@map("followers")
+}
+
+model Subscription {
+    id           String   @id @default(uuid())
+    subscriberId String
+    subscribedId String
+    subscriber   User     @relation("Subscriptions", fields: [subscriberId], references: [id])
+    subscribed   User     @relation("Subscribers", fields: [subscribedId], references: [id])
+    createdAt    DateTime @default(now()) @map("created_at")
+    updatedAt    DateTime @updatedAt @map("updated_at")
+
+    @@map("subscriptions")
+}
+
+model UserSubscription {
+    id String @id @default(uuid())
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    price Int    @default(179)
+    icon  String @default("")
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
-    @@map("users")
+    @@map("userSubscriptions")
+}
+
+model Moderator {
+    id         String   @id @default(uuid()) @map("id")
+    createdAt  DateTime @default(now()) @map("created_at")
+    updatedAt  DateTime @updatedAt @map("updated_at")
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId     String
+    streamer   User     @relation("StreamModerators", fields: [streamerId], references: [id], onDelete: Cascade)
+    streamerId String
+    issuedBans Ban[]    @relation("ModeratorBans")
+
+    @@map("moderators")
+}
+
+model DescriptionPart {
+    id          String   @id @default(uuid()) @map("id")
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String
+    image       String
+    description String
+    url         String
+
+    @@map("descriptionParts")
+}
+
+model Ban {
+    id          String    @id @default(uuid()) @map("id")
+    createdAt   DateTime  @default(now()) @map("created_at")
+    updatedAt   DateTime  @updatedAt @map("updated_at")
+    user        User      @relation("targetUser", fields: [userId], references: [id])
+    userId      String
+    moderator   Moderator @relation("ModeratorBans", fields: [moderatorId], references: [id])
+    moderatorId String
+    streamer    User      @relation("streamerId", fields: [streamerId], references: [id])
+    streamerId  String
+    reason      String
+    action      banAction
+    expiresAt   DateTime?
+
+    @@map("bans")
+}
+
+model StreamerCurrency {
+    id               String            @id @default(uuid()) @map("id")
+    createdAt        DateTime          @default(now()) @map("created_at")
+    updatedAt        DateTime          @updatedAt @map("updated_at")
+    name             String
+    image            String            @default("")
+    currencyBalances CurrencyBalance[]
+    user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId           String
+
+    @@map("streamersCurrency")
+}
+
+model CurrencyBalance {
+    id                 String            @id @default(uuid()) @map("id")
+    createdAt          DateTime          @default(now()) @map("created_at")
+    updatedAt          DateTime          @updatedAt @map("updated_at")
+    streamerCurrency   StreamerCurrency? @relation(fields: [streamerCurrencyId], references: [id], onDelete: Cascade)
+    streamerCurrencyId String?
+    count              Int               @default(0)
+    user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId             String
+
+    @@map("currencyBalances")
+}
+
+model UserReward {
+    id           String        @id @default(uuid()) @map("id")
+    createdAt    DateTime      @default(now()) @map("created_at")
+    updatedAt    DateTime      @updatedAt @map("updated_at")
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+    image        String        @default("")
+    description  String
+    name         String
+    price        Int
+    BuyerRewards BuyerReward[]
+
+    @@map("userRewards")
+}
+
+model BuyerReward {
+    id        String     @id @default(uuid()) @map("id")
+    createdAt DateTime   @default(now()) @map("created_at")
+    updatedAt DateTime   @updatedAt @map("updated_at")
+    user      User       @relation(fields: [userId], references: [id])
+    userId    String
+    reward    UserReward @relation(fields: [rewardId], references: [id])
+    rewardId  String
+
+    @@map("buyerRewards")
+}
+
+model Stream {
+    id               String     @id @default(uuid()) @map("id")
+    createdAt        DateTime   @default(now()) @map("created_at")
+    updatedAt        DateTime   @updatedAt @map("updated_at")
+    name             String
+    countOnline      Int        @default(0)
+    categories       Category[]
+    tag              String[]
+    theHighestOnline Int
+    theAverageOnline Int
+    user             User?      @relation
+    qualityUrls      Json
+
+    @@map("streamers")
+}
+
+model StreamStats {
+    id               String     @id @default(uuid()) @map("id")
+    createdAt        DateTime   @default(now()) @map("created_at")
+    updatedAt        DateTime   @updatedAt @map("updated_at")
+    name             String
+    whenEnded        DateTime
+    duration         Int
+    categories       Category[]
+    tag              String[]
+    theHighestOnline Int
+    theAverageOnline Int
+    user             User       @relation(fields: [userId], references: [id])
+    userId           String
+
+    @@map("streamStats")
+}
+
+model Emote {
+    id        String   @id @default(uuid()) @map("id")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    image     String
+    tag       String   @unique
+    name      String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+
+    @@map("emotes")
+}
+
+model Category {
+    id            String       @id @default(uuid()) @map("id")
+    createdAt     DateTime     @default(now()) @map("created_at")
+    updatedAt     DateTime     @updatedAt @map("updated_at")
+    StreamStats   StreamStats? @relation(fields: [streamStatsId], references: [id])
+    streamStatsId String?
+    Stream        Stream?      @relation(fields: [streamId], references: [id])
+    streamId      String?
+    name          String
+    image         String
+    description   String
+
+    @@map("categories")
+}
+
+model Chat {
+    id              String    @id @default(uuid()) @map("id")
+    createdAt       DateTime  @default(now()) @map("created_at")
+    updatedAt       DateTime  @updatedAt @map("updated_at")
+    messages        Message[] @relation("ChatMessages")
+    pinnedMessage   Message?  @relation("PinnedMessage", fields: [pinnedMessageId], references: [id])
+    pinnedMessageId String?
+    User            User?     @relation(fields: [userId], references: [id])
+    userId          String?
+
+    @@map("chats")
+}
+
+model Message {
+    id             String    @id @default(uuid()) @map("id")
+    createdAt      DateTime  @default(now()) @map("created_at")
+    updatedAt      DateTime  @updatedAt @map("updated_at")
+    chat           Chat      @relation("ChatMessages", fields: [chatId], references: [id], onDelete: Cascade)
+    chatId         String
+    sender         User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+    senderId       String    @map("sender_id")
+    reply          Message?  @relation("MessageReplies", fields: [replyMessageId], references: [id])
+    replyMessageId String?   @map("message_id")
+    replies        Message[] @relation("MessageReplies")
+    pinnedInChats  Chat[]    @relation("PinnedMessage")
+    content        String
+
+    @@map("messages")
+}
+
+model Notification {
+    id         String   @id @default(uuid()) @map("id")
+    createdAt  DateTime @default(now()) @map("created_at")
+    updatedAt  DateTime @updatedAt @map("updated_at")
+    content    String
+    link       String?
+    forUser    User     @relation(fields: [forUserId], references: [id])
+    forUserId  String
+    fromUser   User     @relation("fromUserNotification", fields: [fromUserId], references: [id])
+    fromUserId String
+
+    @@map("notifications")
 }
 
 model Account {
@@ -59,17 +325,6 @@ model Token {
     @@map("tokens")
 }
 
-model Session {
-    id String @id @default(uuid())
-
-    userId String @map("user_id")
-
-    userAgent  String
-    ipAddress  String
-    lastLogin  DateTime
-    lastAction DateTime
-    isActive   Boolean
-}
 
 enum AuthMethod {
     CREDENTIALS
@@ -78,10 +333,17 @@ enum AuthMethod {
     GITHUB
 }
 
+
+
 enum TokenType {
     VERIFICATION
     TWO_FACTOR
     PASSWORD_RESET
     TWO_FACTOR_RESET
     EMAIL_CHANGE
+}
+
+enum banAction {
+    MUTE
+    BAN
 }

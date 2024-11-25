@@ -3,9 +3,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UserService } from 'src/user/user.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { getJwtConfig } from 'src/config/jwt.config';
-import { JwtStrategy } from './jwt.strategy';
 import { ProviderModule } from './provider/provider.module';
 import { getProvidersConfig } from 'src/config/providers.config';
 import { getRecaptchaConfig } from 'src/config/recaptcha.config';
@@ -20,17 +17,12 @@ import { MailService } from 'src/libs/mail/mail.service';
     AuthService,
     UserService,
     MailService,
-    JwtStrategy,
     TwoFactorAuthService,
     EmailConfirmationService,
+    ConfigService,
   ],
   imports: [
     ConfigModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: getJwtConfig,
-    }),
     ProviderModule.registerAsync({
       imports: [ConfigModule],
       useFactory: getProvidersConfig,

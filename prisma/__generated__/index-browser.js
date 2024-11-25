@@ -128,11 +128,182 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   avatar: 'avatar',
+  description: 'description',
+  banner: 'banner',
   isVerified: 'isVerified',
   isTwoFactorEnabled: 'isTwoFactorEnabled',
+  color: 'color',
+  countFollowers: 'countFollowers',
+  streamId: 'streamId',
   method: 'method',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FollowerScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  streamerId: 'streamerId'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  subscriberId: 'subscriberId',
+  subscribedId: 'subscribedId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  price: 'price',
+  icon: 'icon',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ModeratorScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  streamerId: 'streamerId'
+};
+
+exports.Prisma.DescriptionPartScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  image: 'image',
+  description: 'description',
+  url: 'url'
+};
+
+exports.Prisma.BanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  moderatorId: 'moderatorId',
+  streamerId: 'streamerId',
+  reason: 'reason',
+  action: 'action',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.StreamerCurrencyScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  image: 'image',
+  userId: 'userId'
+};
+
+exports.Prisma.CurrencyBalanceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  streamerCurrencyId: 'streamerCurrencyId',
+  count: 'count',
+  userId: 'userId'
+};
+
+exports.Prisma.UserRewardScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  image: 'image',
+  description: 'description',
+  name: 'name',
+  price: 'price'
+};
+
+exports.Prisma.BuyerRewardScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  rewardId: 'rewardId'
+};
+
+exports.Prisma.StreamScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  countOnline: 'countOnline',
+  tag: 'tag',
+  theHighestOnline: 'theHighestOnline',
+  theAverageOnline: 'theAverageOnline',
+  qualityUrls: 'qualityUrls'
+};
+
+exports.Prisma.StreamStatsScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  whenEnded: 'whenEnded',
+  duration: 'duration',
+  tag: 'tag',
+  theHighestOnline: 'theHighestOnline',
+  theAverageOnline: 'theAverageOnline',
+  userId: 'userId'
+};
+
+exports.Prisma.EmoteScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  image: 'image',
+  tag: 'tag',
+  name: 'name',
+  userId: 'userId'
+};
+
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  streamStatsId: 'streamStatsId',
+  streamId: 'streamId',
+  name: 'name',
+  image: 'image',
+  description: 'description'
+};
+
+exports.Prisma.ChatScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  pinnedMessageId: 'pinnedMessageId',
+  userId: 'userId'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  chatId: 'chatId',
+  senderId: 'senderId',
+  replyMessageId: 'replyMessageId',
+  content: 'content'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  content: 'content',
+  link: 'link',
+  forUserId: 'forUserId',
+  fromUserId: 'fromUserId'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -156,19 +327,13 @@ exports.Prisma.TokenScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.SessionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  userAgent: 'userAgent',
-  ipAddress: 'ipAddress',
-  lastLogin: 'lastLogin',
-  lastAction: 'lastAction',
-  isActive: 'isActive'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -180,11 +345,22 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.AuthMethod = exports.$Enums.AuthMethod = {
   CREDENTIALS: 'CREDENTIALS',
   GOOGLE: 'GOOGLE',
   YANDEX: 'YANDEX',
   GITHUB: 'GITHUB'
+};
+
+exports.banAction = exports.$Enums.banAction = {
+  MUTE: 'MUTE',
+  BAN: 'BAN'
 };
 
 exports.TokenType = exports.$Enums.TokenType = {
@@ -197,9 +373,25 @@ exports.TokenType = exports.$Enums.TokenType = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Follower: 'Follower',
+  Subscription: 'Subscription',
+  UserSubscription: 'UserSubscription',
+  Moderator: 'Moderator',
+  DescriptionPart: 'DescriptionPart',
+  Ban: 'Ban',
+  StreamerCurrency: 'StreamerCurrency',
+  CurrencyBalance: 'CurrencyBalance',
+  UserReward: 'UserReward',
+  BuyerReward: 'BuyerReward',
+  Stream: 'Stream',
+  StreamStats: 'StreamStats',
+  Emote: 'Emote',
+  Category: 'Category',
+  Chat: 'Chat',
+  Message: 'Message',
+  Notification: 'Notification',
   Account: 'Account',
-  Token: 'Token',
-  Session: 'Session'
+  Token: 'Token'
 };
 
 /**

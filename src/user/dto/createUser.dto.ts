@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   MinLength,
   Validate,
 } from 'class-validator';
@@ -20,6 +21,7 @@ export class UserCreateDto {
 
   @IsNotEmpty({ message: 'Поле ввода имени не может быть пустым.' })
   @IsString({ message: 'Поле ввода имени должно быть строкой.' })
+  @MaxLength(18,{message:'Поле name не должно быть длинее 18 символов.'})
   name: string;
 
   @IsNotEmpty({ message: 'Поле ввода пароля не может быть пустым.' })

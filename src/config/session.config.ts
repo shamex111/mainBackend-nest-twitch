@@ -20,7 +20,7 @@ export const getSessionConfig = (configService: ConfigService) => {
       httpOnly: parseBoolean(
         configService.getOrThrow<string>('SESSION_HTTP_ONLY'),
       ),
-      secure: parseBoolean(configService.get<string>('SESSION_SECURE')),
+      secure: parseBoolean(configService.getOrThrow<string>('SESSION_SECURE')),
       sameSite: 'lax',
     },
     store: new RedisStore({

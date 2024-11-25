@@ -26,6 +26,10 @@ export class UserService {
         'Пользователь с таким email уже создан.Пожалуйста, используйте другой email.',
       );
 
+    const description = `Мы пока ничего не знаем о ${dto.name}, но точно знаем что ${dto.name} - хороший человек!`;
+    const avatar = ''//допилить
+    const color = ''//допилить
+
     const user = await this.prismaService.user.create({
       data: {
         email: dto.email,
@@ -33,6 +37,7 @@ export class UserService {
         name: dto.name,
         method: dto.method,
         isVerified: dto.isVerified,
+        description,
       },
     });
     return user;

@@ -9,10 +9,15 @@ import { ProviderModule } from './auth/provider/provider.module';
 import { EmailConfirmationModule } from './auth/email-confirmation/email-confirmation.module';
 import { TwoFactorAuthModule } from './auth/two-factor-auth/two-factor-auth.module';
 import { PasswordRecoveryModule } from './auth/password-recovery/password-recovery.module';
-import { getRedisConfig } from './config/redis.config';
 import { EmailChangeModule } from './auth/email-change/email-change.module';
-import { SessionModule } from './auth/session/session.module';
 import { RedisModule } from './redis/redis.module';
+import { ChannelModule } from './channel/channel.module';
+import { ChatModule } from './chat/chat.module';
+import { NotificationModule } from './notification/notification.module';
+import { SubscriptionModule } from './channel/subscription/subscription.module';
+import { ModeratorModule } from './channel/moderator/moderator.module';
+import { CurrencyModule } from './channel/currency/currency.module';
+import { RewardModule } from './channel/reward/reward.module';
 
 @Module({
   imports: [
@@ -30,7 +35,13 @@ import { RedisModule } from './redis/redis.module';
     TwoFactorAuthModule,
     PasswordRecoveryModule,
     EmailChangeModule,
-    SessionModule,
+    ChannelModule,
+    ChatModule,
+    NotificationModule,
+    SubscriptionModule,
+    ModeratorModule,
+    CurrencyModule,
+    RewardModule,
   ],
 
   controllers: [],

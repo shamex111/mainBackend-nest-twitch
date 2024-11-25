@@ -10,8 +10,8 @@ import { getCorsConfig } from './config/cors.config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
-
-  app.use(cookieParser(config.get<string>('COOKIES_SECRET')));
+ 
+  app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,8 +21,10 @@ async function bootstrap() {
 
   app.use(session(getSessionConfig(config)));
 
+  app.setGlobalPrefix(config.getOrThrow<string>('SERVER_PREFIX'));
+
   app.enableCors(getCorsConfig(config));
 
-  await app.listen(config.get<number>('APPLICATION_PORT'));
+  await app.listen(config.getOrThrow<number>('APP_PORT'));
 }
 bootstrap();
