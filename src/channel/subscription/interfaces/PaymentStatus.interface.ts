@@ -26,4 +26,8 @@ class ObjectPayment {
   created_at: string;
   expires_at: string;
   description: string;
+  metadata:{
+    targetUserForSubscribeId:string,
+    userId:string
+  }
 }

@@ -14,11 +14,10 @@ export class AuthGuard implements CanActivate {
   public async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const req = ctx.switchToHttp().getRequest();
 
-    if (typeof req.session.userId === undefined)
+    if (req.session.userId === undefined)
       throw new UnauthorizedException(
         'Вы не зарегестрированы в системе.Пожалуйста, войдите в аккаунт и повторите запрос.',
       );
-
     const user = await this.userService.findById(req.session.userId);
     req.user = user;
     return true;

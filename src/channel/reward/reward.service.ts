@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateRewardDto } from './dto/createRewaed.dto';
+import { CreateRewardDto } from './dto/createReward.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DeleteRewardDto } from './dto/deleteReward.dto';
 import { BuyRewardDto } from './dto/buyReward.dto';
@@ -58,7 +58,7 @@ export class RewardService {
       throw new NotFoundException(
         'Валюта стримера для покупки награды не найдена.',
       );
-      
+
     await this.currencyService.decrementBalance(
       userId,
       streamerCurrency.id,

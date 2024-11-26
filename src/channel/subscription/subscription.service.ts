@@ -1,6 +1,7 @@
 import {
   BadGatewayException,
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -28,9 +29,13 @@ export class SubscriptionService {
     userId: string,
     dto: CreateUserSubscriptionDto,
   ) {
-    const userSubscription =await this.findUserSubscription(userId);
+    const userSubscription =
+      await this.prismaService.userSubscription.findFirst({
+        where: { userId },
+      });
+
     if (userSubscription)
-      throw new NotFoundException('У вас уже есть подписка пользователя.');
+      throw new ConflictException('У вас уже есть подписка пользователя.');
 
     return this.prismaService.userSubscription.create({
       data: {
@@ -49,7 +54,7 @@ export class SubscriptionService {
         'Нет данных для обновления.Пожалуйста, введите хоть какие-то изменения для изменния подписки пользователя.',
       );
 
-      const userSubscription = await this.findUserSubscription(userId);
+    const userSubscription = await this.findUserSubscription(userId);
     if (!userSubscription)
       throw new NotFoundException(
         'Ваша подписка пользователя для изменения не найдена.',
@@ -86,58 +91,88 @@ export class SubscriptionService {
     if (isExist)
       throw new BadGatewayException('Вы уже подписаны на данного пользователя');
 
-    const paymentData: PaymentCreateRequest = {
-      amount: {
-        value: userSubscription.price,
-        currency: CurrencyEnum.RUB,
-      },
-      description: `Покупка подписки стримера ${userSubscription.user.name}`,
-      payment_method_data: {
-        type: PaymentMethodsEnum.bank_card,
-      },
-      confirmation: {
-        type: 'redirect',
-        return_url: dto.callbackUrl,
-      },
-    };
-
-    return this.yookassaService.createPayment(paymentData);
+    return this.prismaService.$transaction(async (prisma) => {
+      const paymentData: PaymentCreateRequest = {
+        amount: {
+          value: userSubscription.price,
+          currency: CurrencyEnum.RUB,
+        },
+        description: `Покупка подписки стримера ${userSubscription.user.name}`,
+        payment_method_data: {
+          type: PaymentMethodsEnum.bank_card,
+        },
+        confirmation: {
+          type: 'redirect',
+          return_url: dto.callbackUrl,
+        },
+        metadata: {
+          userId,
+          targetUserForSubscribeId: userSubscription.userId,
+        },
+      };
+  
+      const payment = await this.yookassaService.createPayment(paymentData);
+  
+      return payment;
+    });
   }
 
   public async updatedBuyUserSubscriptionStatus(dto: IPaymentStatus) {
-    if (dto.event === 'payment.waiting_for_capture') {
-      const paymentId = dto.object.id;
-
-      const paymentDetails =
-        await this.yookassaService.getPaymentDetails(paymentId);
-
-      if (!paymentDetails) {
-        throw new NotFoundException(`Платеж c id:${paymentId} не найден.`);
+    try {
+      if (dto.event === 'payment.waiting_for_capture') {
+        const paymentId = dto.object.id;
+        const paymentDetails = await this.yookassaService.getPaymentDetails(paymentId);
+  
+        if (!paymentDetails) {
+          throw new NotFoundException(`Платеж c id:${paymentId} не найден.`);
+        }
+  
+        const amount: Amount = paymentDetails.amount;
+  
+        const capturedPaymentDetails = await this.yookassaService.capturePayment(paymentId, amount);
+  
+        return capturedPaymentDetails;
       }
-
-      const amount: Amount = paymentDetails.amount;
-
-      const capturedPaymentDetails = await this.yookassaService.capturePayment(
-        paymentId,
-        amount,
-      );
-
-      return capturedPaymentDetails;
+  
+      if (dto.event === 'payment.succeeded') {
+        const metadata = dto.object.metadata;
+        const userId = metadata.userId;
+        const targetUserForSubscribeId = metadata.targetUserForSubscribeId;
+  
+        const isExist = await this.prismaService.subscription.findFirst({
+          where: {
+            subscriberId: userId,
+            subscribedId: targetUserForSubscribeId,
+          },
+        });
+  
+        if (isExist)
+          throw new BadGatewayException('Вы уже подписаны на данного пользователя');
+  
+        await this.prismaService.subscription.create({
+          data: {
+            subscriberId: userId,
+            subscribedId: targetUserForSubscribeId,
+          },
+        });
+  
+        await this.prismaService.user.update({
+          where: {
+            id: targetUserForSubscribeId,
+          },
+          data: {
+            balance: {
+              increment: +dto.object.amount.value,
+            },
+          },
+        });
+      }
+      return true;
+    } catch (error) {
+      throw new BadRequestException('Ошибка при обработке статуса платежа');
     }
-    if (dto.event === 'payment.succeeded') {
-      const descriptionParts = dto.object.description.split(', ');
-      const userId = descriptionParts[0].split('#')[1];
-      const targetUserForSubscribeId = descriptionParts[1].split('#')[1];
-
-      return this.prismaService.subscription.create({
-        data: {
-          subscriberId: userId,
-          subscribedId: targetUserForSubscribeId,
-        },
-      });
-    }
-    return true;
   }
+  
 
   private async findUserSubscription(userId: string) {
     const subscription = await this.prismaService.userSubscription.findFirst({

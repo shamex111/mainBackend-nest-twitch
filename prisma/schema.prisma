@@ -48,9 +48,9 @@ model User {
     method               AuthMethod
     account              Account[]
     UserSubscription     UserSubscription[]
-
-    createdAt DateTime  @default(now()) @map("created_at")
-    updatedAt DateTime  @updatedAt @map("updated_at")
+    balance              Int                @default(0)
+    createdAt            DateTime           @default(now()) @map("created_at")
+    updatedAt            DateTime           @updatedAt @map("updated_at")
 
     @@map("users")
 }
@@ -325,15 +325,12 @@ model Token {
     @@map("tokens")
 }
 
-
 enum AuthMethod {
     CREDENTIALS
     GOOGLE
     YANDEX
     GITHUB
 }
-
-
 
 enum TokenType {
     VERIFICATION

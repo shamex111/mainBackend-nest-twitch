@@ -4,6 +4,7 @@ import { SubscriptionController } from './subscription.controller';
 import { YookassaModule } from 'nestjs-yookassa';
 import { getYooKassaConfig } from 'src/config/yooKassa.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from 'src/user/user.module';
 @Module({
   controllers: [SubscriptionController],
   providers: [SubscriptionService],
@@ -13,6 +14,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: getYooKassaConfig,
       inject: [ConfigService],
     }),
+    UserModule
   ],
 })
 export class SubscriptionModule {}

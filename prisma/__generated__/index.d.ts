@@ -2973,10 +2973,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     countFollowers: number | null
+    balance: number | null
   }
 
   export type UserSumAggregateOutputType = {
     countFollowers: number | null
+    balance: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2993,6 +2995,7 @@ export namespace Prisma {
     countFollowers: number | null
     streamId: string | null
     method: $Enums.AuthMethod | null
+    balance: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3011,6 +3014,7 @@ export namespace Prisma {
     countFollowers: number | null
     streamId: string | null
     method: $Enums.AuthMethod | null
+    balance: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3029,6 +3033,7 @@ export namespace Prisma {
     countFollowers: number
     streamId: number
     method: number
+    balance: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3037,10 +3042,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     countFollowers?: true
+    balance?: true
   }
 
   export type UserSumAggregateInputType = {
     countFollowers?: true
+    balance?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -3057,6 +3064,7 @@ export namespace Prisma {
     countFollowers?: true
     streamId?: true
     method?: true
+    balance?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3075,6 +3083,7 @@ export namespace Prisma {
     countFollowers?: true
     streamId?: true
     method?: true
+    balance?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3093,6 +3102,7 @@ export namespace Prisma {
     countFollowers?: true
     streamId?: true
     method?: true
+    balance?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3198,6 +3208,7 @@ export namespace Prisma {
     countFollowers: number
     streamId: string | null
     method: $Enums.AuthMethod
+    balance: number
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -3235,6 +3246,7 @@ export namespace Prisma {
     countFollowers?: boolean
     streamId?: boolean
     method?: boolean
+    balance?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     descriptionParts?: boolean | User$descriptionPartsArgs<ExtArgs>
@@ -3276,6 +3288,7 @@ export namespace Prisma {
     countFollowers?: boolean
     streamId?: boolean
     method?: boolean
+    balance?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     Stream?: boolean | User$StreamArgs<ExtArgs>
@@ -3295,6 +3308,7 @@ export namespace Prisma {
     countFollowers?: boolean
     streamId?: boolean
     method?: boolean
+    balance?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -3368,6 +3382,7 @@ export namespace Prisma {
       countFollowers: number
       streamId: string | null
       method: $Enums.AuthMethod
+      balance: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -3798,6 +3813,7 @@ export namespace Prisma {
     readonly countFollowers: FieldRef<"User", 'Int'>
     readonly streamId: FieldRef<"User", 'String'>
     readonly method: FieldRef<"User", 'AuthMethod'>
+    readonly balance: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -23286,6 +23302,7 @@ export namespace Prisma {
     countFollowers: 'countFollowers',
     streamId: 'streamId',
     method: 'method',
+    balance: 'balance',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -23714,6 +23731,7 @@ export namespace Prisma {
     countFollowers?: IntFilter<"User"> | number
     streamId?: StringNullableFilter<"User"> | string | null
     method?: EnumAuthMethodFilter<"User"> | $Enums.AuthMethod
+    balance?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     descriptionParts?: DescriptionPartListRelationFilter
@@ -23754,6 +23772,7 @@ export namespace Prisma {
     countFollowers?: SortOrder
     streamId?: SortOrderInput | SortOrder
     method?: SortOrder
+    balance?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     descriptionParts?: DescriptionPartOrderByRelationAggregateInput
@@ -23797,6 +23816,7 @@ export namespace Prisma {
     color?: StringFilter<"User"> | string
     countFollowers?: IntFilter<"User"> | number
     method?: EnumAuthMethodFilter<"User"> | $Enums.AuthMethod
+    balance?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     descriptionParts?: DescriptionPartListRelationFilter
@@ -23837,6 +23857,7 @@ export namespace Prisma {
     countFollowers?: SortOrder
     streamId?: SortOrderInput | SortOrder
     method?: SortOrder
+    balance?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -23863,6 +23884,7 @@ export namespace Prisma {
     countFollowers?: IntWithAggregatesFilter<"User"> | number
     streamId?: StringNullableWithAggregatesFilter<"User"> | string | null
     method?: EnumAuthMethodWithAggregatesFilter<"User"> | $Enums.AuthMethod
+    balance?: IntWithAggregatesFilter<"User"> | number
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -25169,6 +25191,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -25209,6 +25232,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -25247,6 +25271,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -25287,6 +25312,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -25326,6 +25352,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25343,6 +25370,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25361,6 +25389,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26929,12 +26958,14 @@ export namespace Prisma {
     countFollowers?: SortOrder
     streamId?: SortOrder
     method?: SortOrder
+    balance?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     countFollowers?: SortOrder
+    balance?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -26951,6 +26982,7 @@ export namespace Prisma {
     countFollowers?: SortOrder
     streamId?: SortOrder
     method?: SortOrder
+    balance?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -26969,12 +27001,14 @@ export namespace Prisma {
     countFollowers?: SortOrder
     streamId?: SortOrder
     method?: SortOrder
+    balance?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     countFollowers?: SortOrder
+    balance?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -31033,6 +31067,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31072,6 +31107,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -31114,6 +31150,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31153,6 +31190,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -31206,6 +31244,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -31245,6 +31284,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -31293,6 +31333,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -31332,6 +31373,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -31369,6 +31411,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31408,6 +31451,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -31450,6 +31494,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31489,6 +31534,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -31542,6 +31588,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -31581,6 +31628,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -31629,6 +31677,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -31668,6 +31717,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -31705,6 +31755,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31744,6 +31795,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -31797,6 +31849,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -31836,6 +31889,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -31873,6 +31927,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31912,6 +31967,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -31954,6 +32010,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -31993,6 +32050,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -32078,6 +32136,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -32117,6 +32176,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -32165,6 +32225,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -32204,6 +32265,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -32257,6 +32319,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     following?: FollowerCreateNestedManyWithoutUserInput
@@ -32296,6 +32359,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     following?: FollowerUncheckedCreateNestedManyWithoutUserInput
@@ -32349,6 +32413,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     following?: FollowerUpdateManyWithoutUserNestedInput
@@ -32388,6 +32453,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     following?: FollowerUncheckedUpdateManyWithoutUserNestedInput
@@ -32425,6 +32491,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -32464,6 +32531,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -32527,6 +32595,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -32566,6 +32635,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -32619,6 +32689,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -32658,6 +32729,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -32733,6 +32805,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -32772,6 +32845,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -32835,6 +32909,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -32874,6 +32949,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -32943,6 +33019,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -32982,6 +33059,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -33042,6 +33120,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -33081,6 +33160,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -33163,6 +33243,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -33202,6 +33283,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -33239,6 +33321,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -33278,6 +33361,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -33355,6 +33439,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -33394,6 +33479,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -33447,6 +33533,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -33486,6 +33573,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -33566,6 +33654,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -33605,6 +33694,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -33705,6 +33795,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -33743,6 +33834,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -33827,6 +33919,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -33865,6 +33958,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -33933,6 +34027,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -33972,6 +34067,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -34041,6 +34137,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -34080,6 +34177,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -34117,6 +34215,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -34156,6 +34255,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -34209,6 +34309,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -34248,6 +34349,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -34480,6 +34582,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -34519,6 +34622,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -34621,6 +34725,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -34660,6 +34765,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -34718,6 +34824,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -34757,6 +34864,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -34922,6 +35030,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -34961,6 +35070,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -35063,6 +35173,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -35102,6 +35213,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -35144,6 +35256,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -35183,6 +35296,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -35236,6 +35350,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -35275,6 +35390,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -35323,6 +35439,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -35362,6 +35479,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput
@@ -35399,6 +35517,7 @@ export namespace Prisma {
     color?: string
     countFollowers?: number
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartCreateNestedManyWithoutUserInput
@@ -35438,6 +35557,7 @@ export namespace Prisma {
     countFollowers?: number
     streamId?: string | null
     method: $Enums.AuthMethod
+    balance?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     descriptionParts?: DescriptionPartUncheckedCreateNestedManyWithoutUserInput
@@ -35491,6 +35611,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     countFollowers?: IntFieldUpdateOperationsInput | number
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUpdateManyWithoutUserNestedInput
@@ -35530,6 +35651,7 @@ export namespace Prisma {
     countFollowers?: IntFieldUpdateOperationsInput | number
     streamId?: NullableStringFieldUpdateOperationsInput | string | null
     method?: EnumAuthMethodFieldUpdateOperationsInput | $Enums.AuthMethod
+    balance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     descriptionParts?: DescriptionPartUncheckedUpdateManyWithoutUserNestedInput

@@ -1,8 +1,15 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { RewardService } from './reward.service';
 import { Authorization } from 'src/auth/decorators/auth.decorator';
 import { Authorized } from 'src/auth/decorators/authorized.decorator';
-import { CreateRewardDto } from './dto/createRewaed.dto';
+import { CreateRewardDto } from './dto/createReward.dto';
 import { DeleteRewardDto } from './dto/deleteReward.dto';
 import { BuyRewardDto } from './dto/buyReward.dto';
 

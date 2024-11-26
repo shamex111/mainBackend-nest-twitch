@@ -136,6 +136,7 @@ exports.Prisma.UserScalarFieldEnum = {
   countFollowers: 'countFollowers',
   streamId: 'streamId',
   method: 'method',
+  balance: 'balance',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
