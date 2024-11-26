@@ -4,9 +4,9 @@ import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
-import { getSessionConfig } from './config/session.config';
-import { getCorsConfig } from './config/cors.config';
-import { getGlobalPipeConfig } from './config/globalPipe.config';
+import { getSessionConfig } from './core/config/session.config';
+import { getCorsConfig } from './core/config/cors.config';
+import { getGlobalPipeConfig } from './core/config/globalPipe.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
