@@ -7,7 +7,4 @@ export class ChangeUserSubscriptionDto {
   @Max(10000, { message: 'Подписка не может стоить больше 10000 рублей.' })
   price?: number;
 
-  @IsOptional()
-  @IsString({message:'Поле ввода icon должно быть строкой.'})
-  icon?: string;
 }

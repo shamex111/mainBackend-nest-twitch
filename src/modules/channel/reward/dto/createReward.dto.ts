@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsInt,
   IsNotEmpty,
@@ -9,9 +10,6 @@ import {
 } from 'class-validator';
 
 export class CreateRewardDto {
-  @IsOptional()
-  @IsString({ message: 'Поле image должно быть строкой.' })
-  image?: string;
 
   @IsNotEmpty({ message: 'Поле name не может быть пустым.' })
   @IsString({ message: 'Поле name должно быть строкой.' })
@@ -25,6 +23,7 @@ export class CreateRewardDto {
   description: string;
 
   @IsNotEmpty({ message: 'Поле ввода price не может быть пустым.' })
+  @Type(() => Number)
   @IsInt({ message: 'price награды должна быть целым числом.' })
   @Min(1, { message: 'Цена должна быть хотя бы 1.' })
   @Max(1000000, { message: 'Цена не может быть больше миллиона.' })

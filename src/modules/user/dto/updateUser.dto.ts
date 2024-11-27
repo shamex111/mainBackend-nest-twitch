@@ -8,10 +8,6 @@ export class UpdateUserDto {
   name?: string;
 
   @IsOptional()
-  @IsString({ message: 'Аватар должен быть строкой.' })
-  avatar?: string;
-
-  @IsOptional()
   @IsString({ message: 'Описание должен быть строкой.' })
   description?: string;
 

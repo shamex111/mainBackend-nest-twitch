@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AssignModeratorDto } from './dto/assignModerator.dto';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { create } from 'domain';

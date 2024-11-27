@@ -7,12 +7,21 @@ import { CreateCurrencyDto } from './dto/createCurrency.dto';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { EditCurrencyDto } from './dto/editCurrency.dto';
 import { CreateCurrencyBalanceDto } from './dto/CreateCurrencyBalance.dto';
+import * as sharp from 'sharp';
+import { S3Service } from 'src/modules/libs/s3/s3.service';
 
 @Injectable()
 export class CurrencyService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly prismaService: PrismaService,
+    private readonly s3Service: S3Service,
+  ) {}
 
-  public async createCurrency(dto: CreateCurrencyDto, userId: string) {
+  public async createCurrency(
+    dto: CreateCurrencyDto,
+    userId: string,
+    file: Express.Multer.File,
+  ) {
     const isExist = await this.prismaService.streamerCurrency.findFirst({
       where: {
         userId,
@@ -20,10 +29,28 @@ export class CurrencyService {
     });
     if (isExist) throw new BadRequestException('У вас уже есть валюта.');
 
-    return this.prismaService.streamerCurrency.create({
+    const newStreamerCurrency =
+      await this.prismaService.streamerCurrency.create({
+        data: {
+          userId,
+          ...dto,
+        },
+      });
+    const fileName = `/streamer-currencies/${newStreamerCurrency.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(256, 256)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+
+    return this.prismaService.streamerCurrency.update({
+      where: {
+        id: newStreamerCurrency.id,
+      },
       data: {
-        userId,
-        ...dto,
+        image: fileName,
       },
     });
   }
@@ -35,7 +62,7 @@ export class CurrencyService {
       },
     });
     if (!isExist) throw new NotFoundException('У вас нет валюты.');
-
+    await this.s3Service.deleteFile(isExist.image);
     await this.prismaService.streamerCurrency.delete({
       where: {
         id: isExist.id,
@@ -56,6 +83,7 @@ export class CurrencyService {
       },
     });
     if (!isExist) throw new NotFoundException('У вас нет валюты.');
+    
 
     return this.prismaService.streamerCurrency.update({
       where: {
@@ -67,6 +95,32 @@ export class CurrencyService {
     });
   }
 
+  public async editCurrencyImage(userId:string,file:Express.Multer.File){
+    const isExist = await this.prismaService.streamerCurrency.findFirst({
+      where: {
+        userId,
+      },
+    });
+    if (!isExist) throw new NotFoundException('У вас нет валюты.');
+    await this.s3Service.deleteFile(isExist.image);
+    const fileName = `/streamer-currencies/${isExist.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(256, 256)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+
+    return this.prismaService.streamerCurrency.update({
+      where: {
+        id: isExist.id,
+      },
+      data: {
+        image: fileName,
+      },
+    });
+  }
   public async createCurrencyBalance(
     dto: CreateCurrencyBalanceDto,
     userId: string,

@@ -6,7 +6,7 @@ import { TwoFactorAuthController } from './two-factor-auth.controller';
 import { UserModule } from 'src/modules/user/user.module';
 
 @Module({
-  imports: [forwardRef(() => UserModule)],
+  imports: [forwardRef(() => UserModule),],
   controllers: [TwoFactorAuthController],
   providers: [TwoFactorAuthService, MailService],
   exports: [TwoFactorAuthService],

@@ -11,6 +11,7 @@ import { TwoFactorAuthModule } from '../two-factor-auth/two-factor-auth.module';
   imports: [
     forwardRef(() => UserModule),
     forwardRef(() => TwoFactorAuthModule),
+    
   ],
   controllers: [EmailConfirmationController],
   providers: [EmailConfirmationService, MailService, UserService],

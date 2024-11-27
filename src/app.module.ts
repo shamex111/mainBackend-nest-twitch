@@ -19,6 +19,7 @@ import { ModeratorModule } from './modules/channel/moderator/moderator.module';
 import { CurrencyModule } from './modules/channel/currency/currency.module';
 import { RewardModule } from './modules/channel/reward/reward.module';
 import { S3Module } from './modules/libs/s3/s3.module';
+import { StreamModule } from './modules/stream/stream.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { S3Module } from './modules/libs/s3/s3.module';
     CurrencyModule,
     RewardModule,
     S3Module,
+    StreamModule,
   ],
 
   controllers: [],

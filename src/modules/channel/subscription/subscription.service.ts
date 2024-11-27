@@ -17,17 +17,20 @@ import {
   YookassaService,
 } from 'nestjs-yookassa';
 import { IPaymentStatus } from './interfaces/PaymentStatus.interface';
-
+import * as sharp from 'sharp';
+import { S3Service } from 'src/modules/libs/s3/s3.service';
 @Injectable()
 export class SubscriptionService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly yookassaService: YookassaService,
+    private readonly s3Service: S3Service,
   ) {}
 
   public async createUserSubscription(
     userId: string,
     dto: CreateUserSubscriptionDto,
+    file: Express.Multer.File,
   ) {
     const userSubscription =
       await this.prismaService.userSubscription.findFirst({
@@ -37,10 +40,27 @@ export class SubscriptionService {
     if (userSubscription)
       throw new ConflictException('У вас уже есть подписка пользователя.');
 
-    return this.prismaService.userSubscription.create({
+    const newUserSubscription =
+      await this.prismaService.userSubscription.create({
+        data: {
+          userId,
+          ...dto,
+        },
+      });
+    const fileName = `/user-subscriptions/${newUserSubscription.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(128, 128)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+    return this.prismaService.userSubscription.update({
+      where: {
+        id: newUserSubscription.id,
+      },
       data: {
-        userId,
-        ...dto,
+        icon: fileName,
       },
     });
   }
@@ -67,6 +87,40 @@ export class SubscriptionService {
         ...dto,
       },
     });
+  }
+
+  public async changeUserSubscriptionAvatar(
+    userId: string,
+    file: Express.Multer.File,
+  ) {
+    const userSubscription = await this.findUserSubscription(userId);
+    if (!userSubscription)
+      throw new NotFoundException(
+        'Ваша подписка пользователя для изменения не найдена.',
+      );
+
+    await this.s3Service.deleteFile(userSubscription.icon);
+
+    const fileName = `/user-subscriptions/${userSubscription.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(128, 128)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+
+
+    await this.prismaService.userSubscription.update({
+      where: {
+        id: userSubscription.id,
+      },
+      data: {
+        icon: fileName,
+      },
+    });
+
+    return true;
   }
 
   public async buySubscription(userId: string, dto: BuySubscriptionDto) {

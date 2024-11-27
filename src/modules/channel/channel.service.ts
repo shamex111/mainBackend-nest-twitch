@@ -11,12 +11,15 @@ import { CreateDescriptionPartDto } from './dto/createDescriptionPart.dto';
 import { DeleteDescriptionPartDto } from './dto/deleteDescriptionPart.dto';
 import { CreateEmoteDto } from './dto/createEmote.dto';
 import { DeleteEmoteDto } from './dto/deleteEmote.dto';
+import { S3Service } from '../libs/s3/s3.service';
+import * as sharp from 'sharp';
 
 @Injectable()
 export class ChannelService {
   public constructor(
     private readonly userService: UserService,
     private readonly prismaService: PrismaService,
+    private readonly s3Service: S3Service,
   ) {}
 
   public async follow(dto: FollowDto, userId: string) {
@@ -94,13 +97,31 @@ export class ChannelService {
   public async createDescriptionPart(
     dto: CreateDescriptionPartDto,
     userId: string,
+    file: Express.Multer.File,
   ) {
-    return this.prismaService.descriptionPart.create({
+    const newDescriptionPart = await this.prismaService.descriptionPart.create({
       data: {
         userId,
-        image: dto.image,
+        image: '',
         description: dto.description,
         url: dto.url,
+      },
+    });
+    const fileName = `/description-parts/${newDescriptionPart.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(512, 512)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+
+    return this.prismaService.descriptionPart.update({
+      where: {
+        id: newDescriptionPart.id,
+      },
+      data: {
+        image: fileName,
       },
     });
   }
@@ -120,6 +141,7 @@ export class ChannelService {
       throw new NotFoundException(
         'Часть описания с таким id у вас не найдена.',
       );
+    await this.s3Service.deleteFile(existingDescriptionPartDto.image);
     await this.prismaService.descriptionPart.delete({
       where: {
         id: existingDescriptionPartDto.id,
@@ -129,7 +151,11 @@ export class ChannelService {
     return { message: 'Успешное удаление части описания.' };
   }
 
-  public async createEmote(dto: CreateEmoteDto, userId: string) {
+  public async createEmote(
+    dto: CreateEmoteDto,
+    userId: string,
+    file: Express.Multer.File,
+  ) {
     const isExist = await this.prismaService.emote.findFirst({
       where: {
         tag: userId + dto.name,
@@ -138,12 +164,29 @@ export class ChannelService {
     if (isExist)
       throw new BadRequestException('У вас уже создан эмоция с таким именем.');
 
-    return this.prismaService.emote.create({
+    const newEmote = await this.prismaService.emote.create({
       data: {
         userId,
-        image: dto.image,
+        image: '',
         name: dto.name,
         tag: userId + dto.name,
+      },
+    });
+
+    const fileName = `/emotes/${newEmote.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(128, 128)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+    return this.prismaService.emote.update({
+      where: {
+        id: newEmote.id,
+      },
+      data: {
+        image: fileName,
       },
     });
   }
@@ -156,7 +199,7 @@ export class ChannelService {
       },
     });
     if (!isExist) throw new BadRequestException('У вас нет эмоции с таким id.');
-
+    await this.s3Service.deleteFile(isExist.image);
     await this.prismaService.emote.delete({
       where: {
         id: isExist.id,

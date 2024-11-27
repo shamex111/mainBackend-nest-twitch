@@ -10,12 +10,19 @@ import { UserCreateDto } from './dto/createUser.dto';
 import { hash } from 'argon2';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { TwoFactorAuthService } from 'src/modules/auth/two-factor-auth/two-factor-auth.service';
+import { User } from 'src/core/prisma/__generated__';
+import { S3Service } from '../libs/s3/s3.service';
+import * as sharp from 'sharp';
+import { randomHexColor } from 'random-hex-color-generator';
+
 @Injectable()
 export class UserService {
   public constructor(
     private readonly prismaService: PrismaService,
     @Inject(forwardRef(() => TwoFactorAuthService))
     private readonly twoFactorAuthService: TwoFactorAuthService,
+
+    private readonly s3Service: S3Service,
   ) {}
 
   public async create(dto: UserCreateDto) {
@@ -27,8 +34,9 @@ export class UserService {
       );
 
     const description = `Мы пока ничего не знаем о ${dto.name}, но точно знаем что ${dto.name} - хороший человек!`;
-    const avatar = ''; //допилить
-    const color = ''; //допилить
+    const avatar = '';
+    const color = randomHexColor();
+    const banner = '';
 
     const user = await this.prismaService.user.create({
       data: {
@@ -38,8 +46,13 @@ export class UserService {
         method: dto.method,
         isVerified: dto.isVerified,
         description,
+        color,
+        avatar,
+        banner,
       },
     });
+    // await this.moderatorService.assignModerator({ userId:user.id }, user.id);
+    // await this.chatService.create(user.id)
     return user;
   }
 
@@ -69,6 +82,31 @@ export class UserService {
     });
 
     return updatedUser;
+  }
+  public async changeAvatar(user: User, file: Express.Multer.File) {
+    if (user.avatar) {
+      await this.s3Service.deleteFile(user.avatar);
+    }
+
+    const fileName = `/users/${user.id}.webp`;
+
+    const processedBuffer = await sharp(file.buffer)
+      .resize(512, 512)
+      .webp()
+      .toBuffer();
+
+    await this.s3Service.uploadFile(processedBuffer, fileName, 'image/webp');
+
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        avatar: fileName,
+      },
+    });
+
+    return true;
   }
 
   public async findByEmail(email: string) {
