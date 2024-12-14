@@ -10,6 +10,7 @@ import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
 import { EmailConfirmationService } from './email-confirmation/email-confirmation.service';
 import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service';
 import { MailService } from 'src/modules/libs/mail/mail.service';
+import { SessionService } from './session/session.service';
 
 @Module({
   controllers: [AuthController],
@@ -20,6 +21,7 @@ import { MailService } from 'src/modules/libs/mail/mail.service';
     TwoFactorAuthService,
     EmailConfirmationService,
     ConfigService,
+    SessionService
   ],
   imports: [
     ConfigModule,

@@ -16,6 +16,7 @@ import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service'
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { UAParser } from 'ua-parser-js';
+import { SessionService } from './session/session.service';
 
 @Injectable()
 export class AuthService {
@@ -23,12 +24,12 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly providerService: ProviderService,
     private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService,
     private readonly emailConfirmationService: EmailConfirmationService,
     private readonly twoFactorAuthService: TwoFactorAuthService,
+    private readonly sessionService: SessionService,
   ) {}
   protected parser = new UAParser();
-  public async register(dto: RegisterDto, req: Request) {
+  public async register(dto: RegisterDto, req: Request, userAgent: string) {
     const newUser = await this.userService.create({
       email: dto.email,
       name: dto.name,
@@ -38,10 +39,10 @@ export class AuthService {
 
     this.emailConfirmationService.sendVerificationUser(newUser.email);
 
-    return this.saveSession(req, newUser);
+    return this.sessionService.saveSession(userAgent, req, newUser);
   }
 
-  public async login(dto: LoginDto, req: Request) {
+  public async login(dto: LoginDto, req: Request, userAgent: string) {
     const user = await this.userService.findByEmail(dto.email);
 
     if (!user)
@@ -75,13 +76,14 @@ export class AuthService {
       );
     }
 
-    return this.saveSession(req, user);
+    return this.sessionService.saveSession(userAgent, req, user);
   }
 
   public async extractProfileFromCode(
     provider: string,
     code: string,
     req: Request,
+    userAgent: string,
   ) {
     const providerInstance = this.providerService.findByService(provider);
     const profile = await providerInstance.findUserByCode(code);
@@ -97,7 +99,7 @@ export class AuthService {
       : null;
 
     if (user) {
-      return this.saveSession(req, user);
+      return this.sessionService.saveSession(userAgent, req, user);
     }
 
     user = await this.userService.create({
@@ -120,47 +122,6 @@ export class AuthService {
         },
       });
     }
-    return this.saveSession(req, user);
-  }
-
-  public async logout(req: Request, res: Response): Promise<void> {
-    return new Promise((resolve, reject) => {
-      req.session.destroy((err) => {
-        if (err) {
-          return reject(
-            new InternalServerErrorException(
-              'Не удалось завершить сессию. Возможно, возникла проблема с серве  ром или сессия уже была завершена.',
-            ),
-          );
-        }
-        res.clearCookie(this.configService.getOrThrow<string>('SESSION_NAME'));
-        resolve();
-      });
-    });
-  }
-  public async saveSession(req: Request, user: User) {
-    try {
-      req.session.userId = user.id;
-
-      await new Promise<void>((resolve, reject) => {
-        req.session.save((err) => {
-          if (err) {
-            return reject(
-              new InternalServerErrorException(
-                'Не удалось сохранить сессию. Проверьте, правильно ли настроены параметры сессии.',
-              ),
-            );
-          }
-          resolve();
-        });
-      });
-
-      return { user };
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Ошибка при сохранении сессии',
-        error,
-      );
-    }
+    return this.sessionService.saveSession(userAgent, req, user);
   }
 }

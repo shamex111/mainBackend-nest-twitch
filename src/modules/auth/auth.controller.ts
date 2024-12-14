@@ -19,6 +19,7 @@ import { Provider } from './decorators/provider.decorator';
 import { Request, Response } from 'express';
 import { ProviderService } from './provider/provider.service';
 import { ConfigService } from '@nestjs/config';
+import { UserAgent } from './decorators/user-agent.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -31,25 +32,23 @@ export class AuthController {
   @Recaptcha()
   @Post('register')
   @HttpCode(HttpStatus.OK)
-  public async register(@Body() dto: RegisterDto, @Req() req: Request) {
-    return this.authService.register(dto, req);
+  public async register(
+    @Body() dto: RegisterDto,
+    @Req() req: Request,
+    @UserAgent() userAgent: string,
+  ) {
+    return this.authService.register(dto, req, userAgent);
   }
 
   @Recaptcha()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Body() dto: LoginDto, @Req() req: Request) {
-    return this.authService.login(dto, req);
-  }
-
-  @Recaptcha()
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  public async logout(
+  public async login(
+    @Body() dto: LoginDto,
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @UserAgent() userAgent: string,
   ) {
-    return this.authService.logout(req, res);
+    return this.authService.login(dto, req, userAgent);
   }
 
   @Get('/oauth/callback/:provider')
@@ -59,11 +58,17 @@ export class AuthController {
     @Query('code') code: string,
     @Param('provider') provider: string,
     @Req() req: Request,
+    @UserAgent() userAgent: string,
   ) {
     if (!code) {
       throw new BadRequestException('Не был предоставлен код авторизации');
     }
-    await this.authService.extractProfileFromCode(provider, code, req);
+    await this.authService.extractProfileFromCode(
+      provider,
+      code,
+      req,
+      userAgent,
+    );
     return res.redirect(
       `${this.configService.getOrThrow<string>('ALLOWED_ORIGIN')}/dashboard/settings`,
     );
